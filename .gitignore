@@ -63,3 +63,6 @@ target/
 
 #OS X stuff:
 .DS_Store
+
+.venv
+.idea

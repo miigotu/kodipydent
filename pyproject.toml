@@ -1,0 +1,152 @@
+[tool.poetry]
+name = "kodipydent-alt"
+version = "2021.7.16"
+description = "A complete Python client for the Kodi JSON-RPC API"
+keywords = ["Kodi", "JSON-RPC", "JSONRPC", "RPC", "JSON", "client", "XBMC"]
+authors = [
+    "Jesse Shapiro <jesse@bedrockdata.com>"]
+maintainers = [
+    "Dustyn Gibson <miigotu@gmail.com>"
+]
+
+packages = [
+    { include = "kodipydent" }
+]
+
+repository = "https://github.com/miigotu/kodipydent"
+
+license = "MIT"
+readme = "README.rst"
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities"
+]
+
+[tool.poetry.plugins."poetry.application.plugin"]
+plugin = "poetry_date_version_plugin.plugin:VersionPlugin"
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<4"
+beekeeper-alt = "^2021.7.16"
+
+[tool.poetry.dev-dependencies]
+poetry-date-version-plugin = ">=2021.7.16-6"
+black = "^21.6-beta.0"
+flake9 = "^3.8.3-post.2"
+isort = "^5.9.2"
+pytest-vcr = "^1.0.2"
+pytest-cov = "^2.12.1"
+pytest-isort = "^2.0.0"
+flake8-pytest-style = "^1.5.0"
+flake8-commas = "^2.0.0"
+flake8-quotes = "^3.2.0"
+flake8-bandit = "^2.1.2"
+flake8-docstrings = "^1.6.0"
+codecov = "^2.1.11"
+pytest = "^6.2.4"
+poethepoet = "^0.10.0"
+
+[build-system]
+requires = ["poetry-core", "poetry-date-version-plugin>2021.5.10"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.flake8]
+exclude = [
+    ".eggs",
+    ".git",
+    "__pycache__",
+    "docs/source/conf.py",
+    "build",
+    "dist",
+]
+inline-quotes = "double"
+docstring-convention = "numpy"
+ignore = [
+    "C812",
+    "D4",
+    "D400",
+    "D401",
+    "D403",
+    "D406",
+    "D407",
+    "D200",
+    "D202",
+    "D205",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D106",
+    "S101",
+    "PT009",
+    "PT017"
+]
+
+max_line_length = 160
+show_source = "True"
+builtins = ["_"]
+#select = 'C103'
+
+[tool.black]
+line-length = 160
+target_version = ['py38']
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+testpaths = ["test", "kodipydent"]
+addopts = "--cov=kodipydent --cov-report xml --no-cov-on-fail"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 160
+combine_as_imports = true
+order_by_type = false
+remove_imports = [ "from __future__ import absolute_import", "from __future__ import print_function", "from __future__ import unicode_literals" ]
+extra_standard_library = [ "posixpath", "ntpath" ]
+use_parentheses = true
+src_paths = [ "kodipydent", "test" ]
+
+[tool.poe.tasks]
+pytest = "pytest"
+yarn = "yarn"
+xo = "xo"
+ava = "ava"
+
+_black = {cmd = "black . --check --diff", help = "Check code style using black"}
+_isort = {cmd = "isort . --check-only --diff", help = "Check import order"}
+flake8 = {cmd = "flake8 --select C103 kodipydent test", help = "Check for undefined variables"}
+
+isort = {cmd = "isort .", help = "Fix import order"}
+black = {cmd = "black .", help = "Reformat code using black"}
+
+codecov = "codecov"
+
+lint = ["_black", "_isort", "flake8"]
+format = ["black", "isort", "flake8"]
+
+_poetry_update = {shell = "poetry update", help = "update python dependancies"}
+depup = {shell = "poetry update", help = "update python dependancies"}
+
+test = [
+    { ref = "lint" },
+    { cmd = "pytest" }
+]
